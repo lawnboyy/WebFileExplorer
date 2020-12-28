@@ -1,6 +1,6 @@
 ﻿import { fetchFiles } from "../api/fileApi.js";
 import { Button } from "./button.js";
-import { FileList } from "./fileList.js";
+import { FileTree } from "./fileTree.js";
 
 export const FileDialog = (id, text) => {
     const dialog = document.createElement("dialog");
@@ -11,11 +11,12 @@ export const FileDialog = (id, text) => {
         dialog.open = false;
     };
 
-    const closeButton = Button("closeButton", "Close", onCloseClicked);    
+    const closeButton = Button("closeButton", "Close", onCloseClicked);
     dialog.appendChild(closeButton);
 
     fetchFiles().then((results) => {
-        dialog.appendChild(FileList("fileList", results));
+        const fileTree = new FileTree("fileList", results);
+        dialog.appendChild(fileTree.getFileTree());
     });
 
     return dialog;

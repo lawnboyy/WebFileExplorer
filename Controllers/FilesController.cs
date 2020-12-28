@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebFileExplorer.Models;
+using WebFileExplorer.Repositories;
 
 namespace WebFileExplorer.Controllers
 {
@@ -11,27 +14,20 @@ namespace WebFileExplorer.Controllers
   [Route("[controller]")]
   public class FilesController : ControllerBase
   {
-    private static readonly string[] _files = new[]
-    {
-      "file1.txt", "doc3.docx", "test.txt", "Presentation.ppt"
-    };
+    private readonly IFileRepository _fileRepo;
+    private readonly string _rootFilePath;
 
-    private readonly ILogger<FilesController> _logger;
-
-    public FilesController(ILogger<FilesController> logger)
+    public FilesController(IConfiguration config, IFileRepository fileRepo)
     {
-      _logger = logger;
+      _fileRepo = fileRepo;
+      _rootFilePath = config["RootFilePath"];
     }
 
     [HttpGet]
-    public IEnumerable<File> Get()
+    public FileDirectory Get()
     {
-      var rng = new Random();
-      return _files.Select(f => new File
-      {
-        Name = f
-      })
-      .ToArray();
+      var result = _fileRepo.GetContents(_rootFilePath);
+      return result;
     }
   }
 }

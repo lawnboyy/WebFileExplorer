@@ -8,7 +8,7 @@ namespace WebFileExplorer.Models
   public class FileDirectory
   {
     public string Name { get; init; } = "";
-    public string FullPath { get; init; } = "";
+    public string FullName { get; init; } = "";
     public IList<FileDirectory> SubDirectories { get; } = new List<FileDirectory>();
     public IList<File> Files { get; } = new List<File>();
   }

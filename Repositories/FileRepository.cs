@@ -26,7 +26,7 @@ namespace WebFileExplorer.Repositories
     {
       DirectoryInfo info = new DirectoryInfo(path);
 
-      var fileDirectory = new FileDirectory { Name = info.Name, FullName = info.FullName };
+      var fileDirectory = new FileDirectory { Name = info.Name, FullName = RemoveDriveLetter(info.FullName) };
       var directories = Directory.GetDirectories(path);
 
       foreach (var dir in directories)
@@ -42,6 +42,12 @@ namespace WebFileExplorer.Repositories
       }
 
       return fileDirectory;
+    }
+
+    private string RemoveDriveLetter(string fullPath)
+    {
+      var parts = fullPath.Split(':');
+      return parts[1];
     }
 
     private string GetShortPath(string fullPath)

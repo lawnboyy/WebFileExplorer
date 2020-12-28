@@ -27,22 +27,17 @@ export class FileTree {
     };
 
     #onParentClicked = () => {
-        const directories = this.#rootDir.fullName.split("\\");
-        directories.splice(directories.length - 1, 1);
-        const parentPath = directories.reduce((parent, dir) => {
-            parent = `${parent}\\${dir}`;
-            return parent;
-        });
+        const directories = this.#currentDir.fullName.split("\\");
+        directories.splice(0, 1);
+        directories.splice(directories.length - 1, 1);        
 
         // Find the parent directory...
-        let found = false;
         let curr = this.#rootDir;
-        let currPath = this.#rootDir.fullName;
-        for (var i = 0; i < directories.length; i++) {
+        for (var i = 1; i < directories.length; i++) {
             // Look for the next path from the root.
             for (var j = 0; j < curr.subDirectories.length; j++) {
                 if (curr.subDirectories[j].name === directories[i]) {
-                    curr = curr.subDirectories[i];
+                    curr = curr.subDirectories[j];
                     break;
                 }
             }

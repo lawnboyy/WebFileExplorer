@@ -26,7 +26,7 @@ namespace WebFileExplorer.Repositories
     {
       DirectoryInfo info = new DirectoryInfo(path);
 
-      var fileDirectory = new FileDirectory { Name = info.Name, FullPath = info.FullName };
+      var fileDirectory = new FileDirectory { Name = info.Name, FullName = info.FullName };
       var directories = Directory.GetDirectories(path);
 
       foreach (var dir in directories)
@@ -37,7 +37,7 @@ namespace WebFileExplorer.Repositories
       var files = Directory.GetFiles(path);
       foreach (var f in files)
       {
-        var file = new File { Name = GetShortPath(f), FullPath = f };
+        var file = new File { Name = GetShortPath(f), FullName = f };
         fileDirectory.Files.Add(file);
       }
 

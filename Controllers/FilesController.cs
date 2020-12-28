@@ -7,31 +7,31 @@ using System.Threading.Tasks;
 
 namespace WebFileExplorer.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class FilesController : ControllerBase
+  [ApiController]
+  [Route("[controller]")]
+  public class FilesController : ControllerBase
+  {
+    private static readonly string[] _files = new[]
     {
-        private static readonly string[] _files = new[]
-        {
-            "file1.txt", "doc3.docx", "test.txt", "Presentation.ppt"
-        };
+      "file1.txt", "doc3.docx", "test.txt", "Presentation.ppt"
+    };
 
-        private readonly ILogger<FilesController> _logger;
+    private readonly ILogger<FilesController> _logger;
 
-        public FilesController(ILogger<FilesController> logger)
-        {
-            _logger = logger;
-        }
-
-        [HttpGet]
-        public IEnumerable<File> Get()
-        {
-            var rng = new Random();
-      return _files.Select(f => new File
-            {
-             Name  = f
-            })
-            .ToArray();
-        }
+    public FilesController(ILogger<FilesController> logger)
+    {
+      _logger = logger;
     }
+
+    [HttpGet]
+    public IEnumerable<File> Get()
+    {
+      var rng = new Random();
+      return _files.Select(f => new File
+      {
+        Name = f
+      })
+      .ToArray();
+    }
+  }
 }

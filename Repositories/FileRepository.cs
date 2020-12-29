@@ -10,7 +10,7 @@ namespace WebFileExplorer.Repositories
 {
   public interface IFileRepository
   {
-    FileDirectory GetContents(string path);
+    Dictionary<string, FileDirectory> GetContents(string path);
   }
 
   public class FileRepository : IFileRepository
@@ -22,27 +22,64 @@ namespace WebFileExplorer.Repositories
       _rootFilePath = config["RootFilePath"];
     }
 
-    public FileDirectory GetContents(string path)
+    public Dictionary<string, FileDirectory> GetContents(string rootPath)
     {
-      DirectoryInfo info = new DirectoryInfo(path);
+      var directoryLookup = new Dictionary<string, FileDirectory>();
 
-      var fileDirectory = new FileDirectory { Name = info.Name, FullName = RemoveDriveLetter(info.FullName) };
-      var directories = Directory.GetDirectories(path);
+      // Use a stack to traverse the directory tree by pushing the full name
+      // of each subdirectory to process...
+      var stack = new Stack<string>();
+      stack.Push(rootPath);
 
-      foreach (var dir in directories)
+      while (stack.Count > 0)
       {
-        fileDirectory.SubDirectories.Add(GetContents(dir));
+        var currentPath = stack.Pop();
+        var directoryInfo = new DirectoryInfo(currentPath);
+        var directory = new FileDirectory
+        {
+          Name = GetShortPath(currentPath),
+          Parent = directoryInfo.FullName == rootPath ? null : directoryInfo.Parent?.FullName /* remove drive letter? */
+        };
+
+        foreach (var f in Directory.GetFiles(currentPath))
+        {
+          var file = new File { Name = GetShortPath(f), FullName = f };
+          directory.Files.Add(file);
+        }
+
+        foreach (var subDir in Directory.GetDirectories(currentPath))
+        {
+          directory.SubDirectories.Add(subDir);
+          stack.Push(subDir);
+        }
+
+        directoryLookup.Add(currentPath, directory);
       }
 
-      var files = Directory.GetFiles(path);
-      foreach (var f in files)
-      {
-        var file = new File { Name = GetShortPath(f), FullName = f };
-        fileDirectory.Files.Add(file);
-      }
-
-      return fileDirectory;
+      return directoryLookup;
     }
+
+    //public FileDirectory GetContentsOrig(string path)
+    //{
+    //  DirectoryInfo info = new DirectoryInfo(path);
+
+    //  var fileDirectory = new FileDirectory { Name = info.Name, FullName = RemoveDriveLetter(info.FullName) };
+    //  var directories = Directory.GetDirectories(path);
+
+    //  foreach (var dir in directories)
+    //  {
+    //    fileDirectory.SubDirectories.Add(GetContentsOrig(dir));
+    //  }
+
+    //  var files = Directory.GetFiles(path);
+    //  foreach (var f in files)
+    //  {
+    //    var file = new File { Name = GetShortPath(f), FullName = f };
+    //    fileDirectory.Files.Add(file);
+    //  }
+
+    //  return fileDirectory;
+    //}
 
     private string RemoveDriveLetter(string fullPath)
     {

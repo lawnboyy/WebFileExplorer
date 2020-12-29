@@ -24,10 +24,21 @@ namespace WebFileExplorer.Controllers
     }
 
     [HttpGet]
-    public FileDirectory Get()
+    public Dictionary<string, FileDirectory> Get()
     {
       var result = _fileRepo.GetContents(_rootFilePath);
       return result;
+    }
+
+    [HttpGet("test")]
+    public Dictionary<int, string> Test()
+    {
+      var test = new Dictionary<int, string>();
+      test.Add(1, "one");
+      test.Add(2, "two");
+      test.Add(3, "three");
+
+      return test;
     }
   }
 }

@@ -10,3 +10,8 @@ const onFileManagementButtonClicked = () => {
 
 root.appendChild(fileDialog);
 root.appendChild(Button("fileManagementButton", "Manage Files", onFileManagementButtonClicked));
+
+// If we have some state in the URL, then open the dialog.
+if (window.location.pathname && window.location.pathname !== "/") {
+    fileDialog.open = true;
+}

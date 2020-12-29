@@ -8,6 +8,11 @@ export class FileTree {
     #directoryTable;
     #currentDirName;
 
+    #updateState() {
+        const path = this.#currentDirName.replace(":", "_").replaceAll("\\", "-");
+        window.history.pushState({ data: this.#currentDirName }, "", path);
+    }
+
     #buildFileTree() {
         this.#fileTree.innerHTML = "";
         const currDirectory = this.#directoryTable.directoryLookup[this.#currentDirName];
@@ -35,12 +40,20 @@ export class FileTree {
         if (currDir.parent) {
             this.#currentDirName = currDir.parent;
             this.#buildFileTree();
-        }        
+            this.#updateState();
+        }
     };
+
+    #decodeDirectory = (path) => {
+        return path
+            .replace("_", ":")
+            .replace("/", "")
+            .replaceAll("-", "\\");
+    }
 
     constructor(id, directoryTable) {
         this.#directoryTable = directoryTable;
-        this.#currentDirName = directoryTable.root;
+        this.#currentDirName = window.location.pathname && window.location.pathname !== "/" ? this.#decodeDirectory(window.location.pathname) : directoryTable.root;
         this.#container = document.createElement("div");
         this.#fileTree = document.createElement("ul");
         this.#container.appendChild(this.#fileTree);
@@ -52,9 +65,8 @@ export class FileTree {
     #onDirectoryClicked = (dirName) => {
         this.#currentDirName = dirName;
         this.#buildFileTree();
+        this.#updateState();
     };
-
-    
 
     getFileTree = () => {
         return this.#container;

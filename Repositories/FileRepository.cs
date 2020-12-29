@@ -59,28 +59,6 @@ namespace WebFileExplorer.Repositories
       return directoryLookup;
     }
 
-    //public FileDirectory GetContentsOrig(string path)
-    //{
-    //  DirectoryInfo info = new DirectoryInfo(path);
-
-    //  var fileDirectory = new FileDirectory { Name = info.Name, FullName = RemoveDriveLetter(info.FullName) };
-    //  var directories = Directory.GetDirectories(path);
-
-    //  foreach (var dir in directories)
-    //  {
-    //    fileDirectory.SubDirectories.Add(GetContentsOrig(dir));
-    //  }
-
-    //  var files = Directory.GetFiles(path);
-    //  foreach (var f in files)
-    //  {
-    //    var file = new File { Name = GetShortPath(f), FullName = f };
-    //    fileDirectory.Files.Add(file);
-    //  }
-
-    //  return fileDirectory;
-    //}
-
     private string RemoveDriveLetter(string fullPath)
     {
       var parts = fullPath.Split(':');

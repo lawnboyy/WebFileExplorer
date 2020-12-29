@@ -15,3 +15,5 @@ root.appendChild(Button("fileManagementButton", "Manage Files", onFileManagement
 if (window.location.pathname && window.location.pathname !== "/") {
     fileDialog.open = true;
 }
+
+

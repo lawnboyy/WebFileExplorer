@@ -60,6 +60,13 @@ export class FileTree {
         this.#container.appendChild(Button("backButton", "Back", this.#onBackClicked));
         this.#fileTree.id = this.id;
         this.#buildFileTree();
+
+        window.onpopstate = (event) => {
+            if (event.state) {
+                this.#currentDirName = event.state.data;
+                this.#buildFileTree();
+            }            
+        };
     }
 
     #onDirectoryClicked = (dirName) => {
@@ -71,5 +78,4 @@ export class FileTree {
     getFileTree = () => {
         return this.#container;
     };
-
 };

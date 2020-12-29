@@ -1,13 +1,13 @@
-﻿export const DirectoryListItem = (id, dir, onClicked) => {
+﻿export const DirectoryListItem = (dirName, dirShortName, onClicked) => {
     const directoryListItem = document.createElement("li");
-    directoryListItem.id = id;
-    directoryListItem.innerHTML = `<a href="#">${dir.name}</a>`;
+    directoryListItem.id = dirName;
+    directoryListItem.innerHTML = `<a href="#">${dirShortName}</a>`;
 
     // Styling
     directoryListItem.style.fontWeight = "900";
 
     directoryListItem.onclick = () => {
-        onClicked(dir);
+        onClicked(dirName);
     }
 
     return directoryListItem;

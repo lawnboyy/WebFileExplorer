@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebFileExplorer.Dtos;
 using WebFileExplorer.Models;
 using WebFileExplorer.Repositories;
 
@@ -24,10 +25,10 @@ namespace WebFileExplorer.Controllers
     }
 
     [HttpGet]
-    public Dictionary<string, FileDirectory> Get()
+    public DirectoryTableDto Get()
     {
       var result = _fileRepo.GetContents(_rootFilePath);
-      return result;
+      return new DirectoryTableDto(_rootFilePath, result);
     }
 
     [HttpGet("test")]

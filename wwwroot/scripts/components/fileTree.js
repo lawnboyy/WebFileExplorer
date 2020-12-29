@@ -5,61 +5,50 @@ import { Button } from "./button.js";
 export class FileTree {
     #container;
     #fileTree;
-    #rootDir;
-    #currentDir;
+    #directoryTable;
+    #currentDirName;
 
     #buildFileTree() {
         this.#fileTree.innerHTML = "";
-        for (var i = 0; i < this.#currentDir.subDirectories.length; i++) {
+        const currDirectory = this.#directoryTable.directoryLookup[this.#currentDirName];
+        for (var i = 0; i < currDirectory.subDirectories.length; i++) {
+            // Lookup the subdirectory to get the short name...
+            const subDirFullName = currDirectory.subDirectories[i]
+            const subDir = this.#directoryTable.directoryLookup[subDirFullName];
             this.#fileTree.appendChild(
                 DirectoryListItem(
-                    this.#currentDir.subDirectories[i].fullName,
-                    this.#currentDir.subDirectories[i],
+                    subDirFullName,
+                    subDir.name,
                     this.#onDirectoryClicked));
         }
 
-        for (var i = 0; i < this.#currentDir.files.length; i++) {
+        for (var i = 0; i < currDirectory.files.length; i++) {
             this.#fileTree.appendChild(
-                FileListItem(this.#currentDir.files[i].fullName, this.#currentDir.files[i]));
+                FileListItem(currDirectory.files[i].fullName, currDirectory.files[i]));
         }
 
         return this.#fileTree;
     };
 
-    #onParentClicked = () => {
-        const directories = this.#currentDir.fullName.split("\\");
-        directories.splice(0, 1);
-        directories.splice(directories.length - 1, 1);        
-
-        // Find the parent directory...
-        let curr = this.#rootDir;
-        for (var i = 1; i < directories.length; i++) {
-            // Look for the next path from the root.
-            for (var j = 0; j < curr.subDirectories.length; j++) {
-                if (curr.subDirectories[j].name === directories[i]) {
-                    curr = curr.subDirectories[j];
-                    break;
-                }
-            }
-        }
-
-        this.#currentDir = curr;
+    #onBackClicked = () => {
+        const currDir = this.#directoryTable.directoryLookup[this.#currentDirName];
+        this.#currentDirName = currDir.parent;
         this.#buildFileTree();
     };
 
-    constructor(id, rootDir) {
-        this.#rootDir = rootDir;
-        this.#currentDir = rootDir;
+    constructor(id, directoryTable) {
+        this.#directoryTable = directoryTable;
+        this.#currentDirName = directoryTable.root;
         this.#container = document.createElement("div");
         this.#fileTree = document.createElement("ul");
         this.#container.appendChild(this.#fileTree);
-        this.#container.appendChild(Button("parentButton", "Parent", this.#onParentClicked));
+        this.#container.appendChild(Button("backButton", "Back", this.#onBackClicked));
         this.#fileTree.id = this.id;
         this.#buildFileTree();
     }
 
-    #onDirectoryClicked = (dir) => {
-        this.#currentDir = dir;
+    #onDirectoryClicked = (dirName) => {
+        this.#currentDirName = dirName;
         this.#buildFileTree();
     };
 

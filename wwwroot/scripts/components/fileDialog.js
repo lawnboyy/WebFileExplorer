@@ -12,11 +12,14 @@ export const FileDialog = (id, text) => {
     };
 
     const closeButton = Button("closeButton", "Close", onCloseClicked);
-    dialog.appendChild(closeButton);
+    
 
     fetchFiles().then((results) => {
         const fileTree = new FileTree("fileList", results);
         dialog.appendChild(fileTree.getFileTree());
+        const closeDiv = document.createElement("div");
+        closeDiv.appendChild(closeButton);
+        dialog.appendChild(closeDiv);
     });
 
     return dialog;

@@ -32,8 +32,10 @@ export class FileTree {
 
     #onBackClicked = () => {
         const currDir = this.#directoryTable.directoryLookup[this.#currentDirName];
-        this.#currentDirName = currDir.parent;
-        this.#buildFileTree();
+        if (currDir.parent) {
+            this.#currentDirName = currDir.parent;
+            this.#buildFileTree();
+        }        
     };
 
     constructor(id, directoryTable) {

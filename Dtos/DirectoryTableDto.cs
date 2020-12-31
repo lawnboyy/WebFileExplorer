@@ -9,9 +9,9 @@ namespace WebFileExplorer.Dtos
   public record DirectoryTableDto
   {
     public string Root { get; private set; }
-    public IDictionary<string, FileDirectory> DirectoryLookup { get; private set; }
+    public IDictionary<string, Directory> DirectoryLookup { get; private set; }
 
-    public DirectoryTableDto(string root, IDictionary<string, FileDirectory> directoryLookup)
+    public DirectoryTableDto(string root, IDictionary<string, Directory> directoryLookup)
     {
       Root = root;
       DirectoryLookup = directoryLookup;

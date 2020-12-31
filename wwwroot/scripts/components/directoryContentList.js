@@ -1,7 +1,7 @@
 ﻿import { DirectoryListItem } from "./directoryListItem.js";
 import { FileListItem } from "./fileListItem.js";
 import { Button } from "./button.js";
-import { fetchDirectory } from "../api/fileApi.js";
+import { fetchDirectory } from "../api/api.js";
 import { encodeUrl, decodeUrl } from "../utilities/urlUtility.js";
 
 export class DirectoryContentList {

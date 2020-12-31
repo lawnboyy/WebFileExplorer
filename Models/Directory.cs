@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebFileExplorer.Models
 {
-  public class FileDirectory
+  public class Directory
   {
     public string FullName { get; init; } = "";
     public string Name { get; init; } = "";

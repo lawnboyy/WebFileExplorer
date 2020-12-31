@@ -1,6 +1,6 @@
-﻿import { fetchFiles } from "../api/fileApi.js";
+﻿//import { fetchFiles } from "../api/fileApi.js";
 import { Button } from "./button.js";
-import { FileTree } from "./fileTree.js";
+import { DirectoryContentList } from "./directoryContentList.js";
 
 export const FileDialog = (id, text) => {
     const dialog = document.createElement("dialog");
@@ -13,14 +13,13 @@ export const FileDialog = (id, text) => {
 
     const closeButton = Button("closeButton", "Close", onCloseClicked);
 
-
-    fetchFiles("").then((results) => {
-        const fileTree = new FileTree("fileList", results);
-        dialog.appendChild(fileTree.getFileTree());
-        const closeDiv = document.createElement("div");
-        closeDiv.appendChild(closeButton);
-        dialog.appendChild(closeDiv);
-    });
+    // TODO: Add deep linking here...
+    // const path = window.location.pathname && window.location.pathname !== "/" ? this.#decodeDirectory(window.location.pathname) : "";
+    const fileTree = new DirectoryContentList("fileList", "");
+    dialog.appendChild(fileTree.getFileTree());
+    const closeDiv = document.createElement("div");
+    closeDiv.appendChild(closeButton);
+    dialog.appendChild(closeDiv);
 
     return dialog;
 };

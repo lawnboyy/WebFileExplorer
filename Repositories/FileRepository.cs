@@ -25,13 +25,19 @@ namespace WebFileExplorer.Repositories
 
     public FileDirectory GetContents(string path)
     {
-      var fullPath = $"{_rootFilePath}{path}";
+      var fullPath = $"{_rootFilePath}\\{path}";
       var info = new DirectoryInfo(fullPath);
       var directory = new FileDirectory
       {
         FullName = path,
         Name = GetShortPath(path),
-        Parent = string.IsNullOrEmpty(path) ? null : info.Parent != null ? StripRoot(info.Parent.FullName) : null
+        Parent = string.IsNullOrEmpty(path) 
+          ? null 
+          : info.Parent != null 
+            ? info.Parent.FullName == _rootFilePath
+              ? ""
+              : StripRoot(info.Parent.FullName) 
+            : null
       };
 
       foreach (var f in Directory.GetFiles(fullPath))
@@ -88,7 +94,12 @@ namespace WebFileExplorer.Repositories
     private string StripRoot(string fullPath)
     {
       var parts = fullPath.Split(_rootFilePath);
-      return parts.Length > 0 ? parts[1] : "";
+      // Remove the initial slashes
+      if (parts.Length > 0)
+      {
+        return parts[1].Substring(1);
+      }
+      return "";
     }
 
     private string GetShortPath(string fullPath)

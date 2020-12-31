@@ -2,6 +2,7 @@
 import { FileListItem } from "./fileListItem.js";
 import { Button } from "./button.js";
 import { fetchDirectory } from "../api/fileApi.js";
+import { encodeUrl, decodeUrl } from "../utilities/urlUtility.js";
 
 export class DirectoryContentList {
     #container;
@@ -23,8 +24,8 @@ export class DirectoryContentList {
         };
     }
 
-    #updateState() {        
-        const path = this.#directory.fullName.replaceAll("\\", "-").replaceAll(" ", "--");
+    #updateState() {
+        const path = encodeUrl(this.#directory.fullName);
         window.history.pushState({ data: this.#directory.fullName }, "", path === "" ? "/" : path);
     }
 
@@ -68,14 +69,6 @@ export class DirectoryContentList {
     #getShortName = (path) => {
         const paths = path.split("\\");
         return paths.length > 0 ? paths[paths.length - 1] : "";
-    };
-
-    #decodeDirectory = (path) => {
-        return path
-            .replace("_", ":")
-            .replace("/", "")
-            .replace("--", " ")
-            .replaceAll("-", "\\");
     };
 
     #onDirectoryClicked = (dirName) => {

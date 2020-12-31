@@ -24,17 +24,17 @@ namespace WebFileExplorer.Controllers
       _rootFilePath = config["RootFilePath"];
     }
 
-    [HttpGet("all")]
-    public DirectoryTableDto Get()
-    {
-      var result = _fileRepo.GetAllContents(_rootFilePath);
-      return new DirectoryTableDto(_rootFilePath, result);
-    }
+    //[HttpGet()]
+    //public DirectoryTableDto Get()
+    //{
+    //  var result = _fileRepo.GetAllContents(_rootFilePath);
+    //  return new DirectoryTableDto(_rootFilePath, result);
+    //}
 
     [HttpGet]
-    public FileDirectory Get([FromBody] string path)
+    public FileDirectory Get([FromQuery] string? path)
     {
-      return _fileRepo.GetContents(path);
+      return _fileRepo.GetContents(path != null ? path : "");
     }
 
     [HttpGet("test")]

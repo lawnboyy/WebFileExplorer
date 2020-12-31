@@ -10,7 +10,8 @@ namespace WebFileExplorer.Repositories
 {
   public interface IFileRepository
   {
-    Dictionary<string, FileDirectory> GetContents(string path);
+    Dictionary<string, FileDirectory> GetAllContents(string path);
+    FileDirectory GetContents(string path);
   }
 
   public class FileRepository : IFileRepository
@@ -22,7 +23,31 @@ namespace WebFileExplorer.Repositories
       _rootFilePath = config["RootFilePath"];
     }
 
-    public Dictionary<string, FileDirectory> GetContents(string rootPath)
+    public FileDirectory GetContents(string path)
+    {
+      var fullPath = $"{_rootFilePath}\\{path}";
+      var info = new DirectoryInfo(fullPath);
+      var directory = new FileDirectory
+      {
+        Name = GetShortPath(path),
+        Parent = fullPath == _rootFilePath ? null : info.Parent?.FullName
+      };
+
+      foreach (var f in Directory.GetFiles(fullPath))
+      {
+        var file = new File { Name = GetShortPath(f), FullName = f };
+        directory.Files.Add(file);
+      }
+
+      foreach (var subDir in Directory.GetDirectories(fullPath))
+      {
+        directory.SubDirectories.Add(subDir);
+      }
+
+      return directory;
+    }
+
+    public Dictionary<string, FileDirectory> GetAllContents(string rootPath)
     {
       var directoryLookup = new Dictionary<string, FileDirectory>();
 

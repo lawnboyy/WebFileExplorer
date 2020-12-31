@@ -25,23 +25,24 @@ namespace WebFileExplorer.Repositories
 
     public FileDirectory GetContents(string path)
     {
-      var fullPath = $"{_rootFilePath}\\{path}";
+      var fullPath = $"{_rootFilePath}{path}";
       var info = new DirectoryInfo(fullPath);
       var directory = new FileDirectory
       {
+        FullName = path,
         Name = GetShortPath(path),
-        Parent = fullPath == _rootFilePath ? null : info.Parent?.FullName
+        Parent = string.IsNullOrEmpty(path) ? null : info.Parent != null ? StripRoot(info.Parent.FullName) : null
       };
 
       foreach (var f in Directory.GetFiles(fullPath))
       {
-        var file = new File { Name = GetShortPath(f), FullName = f };
+        var file = new File { Name = GetShortPath(f), FullName = StripRoot(f) };
         directory.Files.Add(file);
       }
 
       foreach (var subDir in Directory.GetDirectories(fullPath))
       {
-        directory.SubDirectories.Add(subDir);
+        directory.SubDirectories.Add(StripRoot(subDir));
       }
 
       return directory;
@@ -84,10 +85,10 @@ namespace WebFileExplorer.Repositories
       return directoryLookup;
     }
 
-    private string RemoveDriveLetter(string fullPath)
+    private string StripRoot(string fullPath)
     {
-      var parts = fullPath.Split(':');
-      return parts[1];
+      var parts = fullPath.Split(_rootFilePath);
+      return parts.Length > 0 ? parts[1] : "";
     }
 
     private string GetShortPath(string fullPath)

@@ -35,13 +35,13 @@ namespace WebFileExplorer.Repositories
             : null
       };
 
-      foreach (var f in System.IO.Directory.GetFiles(fullPath))
+      foreach (var f in Directory.GetFiles(fullPath))
       {
         var file = new File { Name = GetShortPath(f), FullName = StripRoot(f, _rootFilePath) };
         directory.Files.Add(file);
       }
 
-      foreach (var subDir in System.IO.Directory.GetDirectories(fullPath))
+      foreach (var subDir in Directory.GetDirectories(fullPath))
       {
         directory.SubDirectories.Add(StripRoot(subDir, _rootFilePath));
       }

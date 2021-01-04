@@ -5,10 +5,6 @@ import { decodeUrl } from "../utilities/urlUtility.js";
 import { SearchTool } from "./searchTool.js";
 import { SearchResults } from "./searchResults.js";
 
-const onSearchClicked = () => {
-
-};
-
 export const FileDialog = (id, text) => {
     const dialog = document.createElement("dialog");
     dialog.id = id;
@@ -18,9 +14,8 @@ export const FileDialog = (id, text) => {
         dialog.open = false;
     };
 
-
-
     // Deep link to current path...
+    // TODO: Add deep linking for search...
     const path = window.location.pathname && window.location.pathname !== "/" ? decodeUrl(window.location.pathname) : "";
 
     // Create close dialog button
@@ -52,7 +47,7 @@ export const FileDialog = (id, text) => {
     toolbarDiv.appendChild(Button("browseButton", "Browse", onBrowseClicked));
 
     // Add close button
-    const closeButton = Button("closeButton", "Close", onSearchClicked);
+    const closeButton = Button("closeButton", "Close", onCloseClicked);
     toolbarDiv.appendChild(closeButton);
 
     // Add the toolbar
@@ -60,7 +55,6 @@ export const FileDialog = (id, text) => {
 
     // Add the directory contents component...    
     dialog.appendChild(dirContentsContainer);
-
 
     return dialog;
 };

@@ -2,7 +2,7 @@
 import { FileListItem } from "./fileListItem.js";
 import { Button } from "./button.js";
 import { fetchDirectory } from "../api/api.js";
-import { encodeUrl, decodeUrl } from "../utilities/urlUtility.js";
+import { encodeUrl } from "../utilities/urlUtility.js";
 
 export class DirectoryContentList {
     #container;
@@ -12,8 +12,8 @@ export class DirectoryContentList {
     constructor(id, path) {
         this.#container = document.createElement("div");
         this.#contentList = document.createElement("ul");
-        this.#container.appendChild(this.#contentList);
         this.#container.appendChild(Button("backButton", "Up", this.#onUpClicked));
+        this.#container.appendChild(this.#contentList);        
         this.#contentList.id = this.id;
         this.#buildContent(path);
 
@@ -75,7 +75,7 @@ export class DirectoryContentList {
         this.#buildContent(dirName);
     };
 
-    getFileTree = () => {
+    getDirectoryContents = () => {
         return this.#container;
     };
 };

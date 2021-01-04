@@ -3,7 +3,7 @@
     return response.json();
 };
 
-export const fetchFiles = async (term) => {
+export const search = async (term) => {
     const response = await fetch(`/files?term=${term}`);
     return response.json();
 };

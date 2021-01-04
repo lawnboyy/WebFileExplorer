@@ -2,7 +2,12 @@
 import { Button } from "./button.js";
 import { DirectoryContentList } from "./directoryContentList.js";
 import { decodeUrl } from "../utilities/urlUtility.js";
-import { Search } from "./search.js";
+import { SearchTool } from "./searchTool.js";
+import { SearchResults } from "./searchResults.js";
+
+const onSearchClicked = () => {
+
+};
 
 export const FileDialog = (id, text) => {
     const dialog = document.createElement("dialog");
@@ -13,7 +18,7 @@ export const FileDialog = (id, text) => {
         dialog.open = false;
     };
 
-    
+
 
     // Deep link to current path...
     const path = window.location.pathname && window.location.pathname !== "/" ? decodeUrl(window.location.pathname) : "";
@@ -22,22 +27,39 @@ export const FileDialog = (id, text) => {
     const toolbarDiv = document.createElement("div");
     toolbarDiv.style = "display: flex";
 
+    // Create directory contents control
+    const directoryContents = new DirectoryContentList("dir-contents", path);
+    const dirContentsContainer = directoryContents.getDirectoryContents()
+
     // Add search control
-    toolbarDiv.appendChild(Search("file-search", null));
+    let results = null;
+    const onSearchToolClicked = (term) => {
+        results = SearchResults("search-results", term);
+        dirContentsContainer.style = "display: none";
+        dialog.appendChild(results);
+    };
+    toolbarDiv.appendChild(SearchTool("file-search", onSearchToolClicked));
 
     // Add browse button
-    toolbarDiv.appendChild(Button("browseButton", "Browse", null));
+    const onBrowseClicked = () => {
+        if (results) {
+            dialog.removeChild(results);
+        }
+
+        // Un-hide the directory contents...
+        dirContentsContainer.style = "display: block";
+    };
+    toolbarDiv.appendChild(Button("browseButton", "Browse", onBrowseClicked));
 
     // Add close button
-    const closeButton = Button("closeButton", "Close", onCloseClicked);
+    const closeButton = Button("closeButton", "Close", onSearchClicked);
     toolbarDiv.appendChild(closeButton);
 
     // Add the toolbar
     dialog.appendChild(toolbarDiv);
 
-    // Add the directory contents component...
-    const directoryContents = new DirectoryContentList("dir-contents", path);
-    dialog.appendChild(directoryContents.getDirectoryContents());
+    // Add the directory contents component...    
+    dialog.appendChild(dirContentsContainer);
 
 
     return dialog;

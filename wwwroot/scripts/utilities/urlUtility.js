@@ -1,9 +1,9 @@
 ﻿export function decodeUrl(path) {
     return path
-        .replace("-0-", " ")
-        .replaceAll("-1-", "\\");
+        .replace("%20", " ")
+        .replaceAll("%5C", "\\");
 }
 
 export function encodeUrl(path) {
-    return path.replaceAll("\\", "-1-").replaceAll(" ", "-0-");
+    return path.replaceAll("\\", "%5C").replaceAll(" ", "%20");
 }

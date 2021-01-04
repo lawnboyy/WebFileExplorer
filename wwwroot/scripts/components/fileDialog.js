@@ -1,5 +1,4 @@
-﻿//import { fetchFiles } from "../api/fileApi.js";
-import { Button } from "./button.js";
+﻿import { Button } from "./button.js";
 import { DirectoryContentList } from "./directoryContentList.js";
 import { decodeUrl } from "../utilities/urlUtility.js";
 import { SearchTool } from "./searchTool.js";

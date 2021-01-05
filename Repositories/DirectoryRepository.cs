@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using System.IO;
 using static WebFileExplorer.Utilities.PathUtility;
 
@@ -35,9 +36,14 @@ namespace WebFileExplorer.Repositories
             : null
       };
 
-      foreach (var f in Directory.GetFiles(fullPath))
+      foreach (var f in info.EnumerateFiles())
       {
-        var file = new File { Name = GetShortPath(f), FullName = StripRoot(f, _rootFilePath) };
+        var file = new File
+        {
+          Name = GetShortPath(f.FullName),
+          FullName = StripRoot(f.FullName, _rootFilePath),
+          SizeInBytes = f.Length
+        };
         directory.Files.Add(file);
       }
 
@@ -46,7 +52,39 @@ namespace WebFileExplorer.Repositories
         directory.SubDirectories.Add(StripRoot(subDir, _rootFilePath));
       }
 
+      // TODO: This is way too slow. Need to process in the background and
+      // cache it.
+      // directory.SizeInBytes = CalculateFolderSize(info);
+
       return directory;
+    }
+
+    private long CalculateFolderSize(DirectoryInfo dirInfo)
+    {
+      var queue = new Queue<DirectoryInfo>();
+      queue.Enqueue(dirInfo);
+      long result = 0;
+
+      while (queue.Count > 0)
+      {
+        var count = queue.Count;
+        for (int i = 0; i < count; i++)
+        {
+          var dir = queue.Dequeue();
+
+          foreach (var file in dir.EnumerateFiles())
+          {
+            result += file.Length;
+          }
+
+          foreach (var subDir in dir.EnumerateDirectories())
+          {
+            queue.Enqueue(subDir);
+          }
+        }
+      }
+
+      return result;
     }
   }
 }

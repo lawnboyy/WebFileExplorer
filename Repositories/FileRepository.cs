@@ -12,6 +12,7 @@ namespace WebFileExplorer.Repositories
 {
   public interface IFileRepository
   {
+    Task<byte[]> RetrieveFile(string filePath);
     IEnumerable<File> Search(string term);
     IEnumerable<File> SearchBfs(string term);
     IEnumerable<File> SearchBfsParallel(string term);
@@ -25,6 +26,15 @@ namespace WebFileExplorer.Repositories
     public FileRepository(IConfiguration config)
     {
       _rootFilePath = config["RootFilePath"];
+    }
+
+    public async Task<byte[]> RetrieveFile(string path)
+    {
+      var fullPath = $"{_rootFilePath}\\{path}";
+      using var stream = System.IO.File.Open(fullPath, FileMode.Open);
+      byte[] result = new byte[stream.Length];
+      await stream.ReadAsync(result, 0, (int)stream.Length);
+      return result;
     }
 
     public IEnumerable<File> Search(string term)

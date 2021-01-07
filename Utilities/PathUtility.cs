@@ -1,12 +1,19 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace WebFileExplorer.Utilities
 {
-  public static class PathUtility
+  public class PathUtility
   {
+    public static string GetShortPath(string fullPath)
+    {
+      var parts = fullPath.Split('\\');
+      return parts[parts.Length - 1];
+    }
+
     public static string StripRoot(string fullPath, string rootPath)
     {
       var parts = fullPath.Split(rootPath);
@@ -16,12 +23,6 @@ namespace WebFileExplorer.Utilities
         return parts[1].Substring(1);
       }
       return "";
-    }
-
-    public static string GetShortPath(string fullPath)
-    {
-      var parts = fullPath.Split('\\');
-      return parts[parts.Length - 1];
     }
   }
 }

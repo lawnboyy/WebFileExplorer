@@ -40,16 +40,22 @@ namespace WebFileExplorer.Repositories
       {
         var file = new File
         {
-          Name = GetShortPath(f.FullName),
+          Name = f.Name,
           FullName = StripRoot(f.FullName, _rootFilePath),
           SizeInBytes = f.Length
         };
         directory.Files.Add(file);
       }
 
-      foreach (var subDir in Directory.GetDirectories(fullPath))
+      foreach (var subDir in info.EnumerateDirectories())
       {
-        directory.SubDirectories.Add(StripRoot(subDir, _rootFilePath));
+        var subDirectory = new Models.Directory
+        {
+          Name = subDir.Name,
+          FullName = StripRoot(subDir.FullName, _rootFilePath),
+          ItemCount = subDir.GetFiles().Length + subDir.GetDirectories().Length
+        };
+        directory.SubDirectories.Add(subDirectory);
       }
 
       // TODO: This is way too slow. Need to process in the background and
@@ -61,6 +67,8 @@ namespace WebFileExplorer.Repositories
 
     private long CalculateFolderSize(DirectoryInfo dirInfo)
     {
+      // This is very slow. May want to try the built in GetAllFiles
+      // method to see if it's faster.
       var queue = new Queue<DirectoryInfo>();
       queue.Enqueue(dirInfo);
       long result = 0;

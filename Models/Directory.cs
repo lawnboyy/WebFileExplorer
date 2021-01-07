@@ -10,15 +10,9 @@ namespace WebFileExplorer.Models
     public string FullName { get; init; } = "";
     public string Name { get; init; } = "";
     public string? Parent { get; init; }
-    public int ItemCount
-    {
-      get
-      {
-        return SubDirectories.Count + Files.Count;
-      }
-    }
+    public int ItemCount { get; init; }
     public long SizeInBytes { get; set; }
-    public IList<string> SubDirectories { get; } = new List<string>();
+    public IList<Directory> SubDirectories { get; } = new List<Directory>();
     public IList<File> Files { get; } = new List<File>();
   }
 }

@@ -42,14 +42,8 @@ export class DirectoryContentList {
     #render() {
         this.#contentList.innerHTML = "";
         for (var i = 0; i < this.#directory.subDirectories.length; i++) {
-            // Lookup the subdirectory to get the short name...
-            const subDirFullName = this.#directory.subDirectories[i]
-            const subDirShortName = this.#getShortName(this.#directory.subDirectories[i]);
-            this.#contentList.appendChild(
-                DirectoryListItem(
-                    subDirFullName,
-                    subDirShortName,
-                    this.#onDirectoryClicked));
+          this.#contentList.appendChild(
+            DirectoryListItem(this.#directory.subDirectories[i], this.#onDirectoryClicked));
         }
 
         for (var i = 0; i < this.#directory.files.length; i++) {

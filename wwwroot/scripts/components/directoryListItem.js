@@ -5,11 +5,11 @@
   // Container div under each li that will flex content...
   const containerDiv = document.createElement("div");
   containerDiv.style = "display: flex; width: 100%";
-  directoryListItem.appendChild(containerDiv);
+  directoryListItem.appendChild(containerDiv);  
 
   // Inner div that will contain the directory name
   const directoryNameDiv = document.createElement("div");
-  directoryNameDiv.style = "width: 50%";
+  directoryNameDiv.style = "width: 40%";
   directoryNameDiv.innerHTML = `<a href="#">${dir.name}</a>`;
   directoryNameDiv.style.fontWeight = "900";
   directoryNameDiv.title = dir.fullName;

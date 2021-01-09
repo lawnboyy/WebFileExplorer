@@ -1,4 +1,8 @@
-﻿import { formatDiskSize } from "../utilities/fileUtility.js";
+﻿import { DownloadButton } from "./downloadButton.js";
+import { downloadFile } from "../api/api.js";
+import { formatDiskSize } from "../utilities/fileUtility.js";
+
+
 
 export const FileListItem = (id, file) => {
   // Top level list item element that will contain the file attribute content.
@@ -10,9 +14,20 @@ export const FileListItem = (id, file) => {
   containerDiv.style = "display: flex; width: 100%";
   fileListItem.appendChild(containerDiv);
 
+  // Download clicke handler that will fetch the file.
+  const onDownloadClicked = async () => {
+    await downloadFile(file);
+  };
+
+  // Inner div that will contain the download button.
+  const downloadButtonDiv = document.createElement("div");
+  downloadButtonDiv.style = "margin-right: 5px";
+  downloadButtonDiv.appendChild(DownloadButton(`${file.fullName}-download-btn`, onDownloadClicked));
+  containerDiv.appendChild(downloadButtonDiv);
+
   // Inner div that will contain the file name
   const fileNameDiv = document.createElement("div");
-  fileNameDiv.style = "width: 50%";
+  fileNameDiv.style = "width: 40%; margin-right: 5px";
   fileNameDiv.innerHTML = `${file.name}`;
   fileNameDiv.title = file.fullName;
   containerDiv.appendChild(fileNameDiv);
@@ -26,7 +41,7 @@ export const FileListItem = (id, file) => {
   const fileSizeInnerDiv = document.createElement("div");
   const diskSize = formatDiskSize(file.sizeInBytes);
   fileSizeInnerDiv.innerHTML = `${diskSize}`;
-  fileSizeContainerDiv.appendChild(fileSizeInnerDiv);  
+  fileSizeContainerDiv.appendChild(fileSizeInnerDiv);
 
   return fileListItem;
 };

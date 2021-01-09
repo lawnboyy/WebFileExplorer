@@ -1,9 +1,13 @@
 ﻿
-export const Button = (id, text, onButtonClicked) => {
-    const button = document.createElement("button");
-    button.id = id;
-    button.innerHTML = text;
-    button.onclick = onButtonClicked;
+export const Button = (id, text, onButtonClicked, style) => {
+  const button = document.createElement("button");
+  button.id = id;
+  button.innerHTML = text;
+  button.onclick = onButtonClicked;
 
-    return button;
+  if (style) {
+    button.style = style;
+  }
+
+  return button;
 };

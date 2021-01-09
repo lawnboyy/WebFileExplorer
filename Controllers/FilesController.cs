@@ -14,24 +14,31 @@ namespace WebFileExplorer.Controllers
   {
     private readonly IFileRepository _fileRepo;
     private readonly string _rootFilePath;
+    private readonly string _downloadPath;
 
     public FilesController(IConfiguration config, IFileRepository fileRepo)
     {
       _fileRepo = fileRepo;
+      _downloadPath = config["DownloadRootPath"];
       _rootFilePath = config["RootFilePath"];
     }
 
     [HttpGet]
     public IEnumerable<File> Search([FromQuery] string term)
     {
-      return _fileRepo.Search(term);
+      return _fileRepo.Search(term, _rootFilePath);
     }
 
-    [HttpGet("download")]
-    public async Task<FileResult> Download([FromQuery] string path)
+    [HttpPost("download")]
+    public IActionResult Download([FromBody] File file)
     {
-      var fileBytes = await _fileRepo.RetrieveFile(path);
-      return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, path);
+      string fullPath = $"{_rootFilePath}\\{file.FullName}";
+      var downloadFilePath = $"{_downloadPath}\\downloads\\{file.Name}";
+
+      if (_fileRepo.CopyFile(fullPath, downloadFilePath))
+        return Ok(new { DownloadPath = $"downloads/{file.Name}" });
+      else
+        return StatusCode(500, "There was a problem downloading the file.");
     }
   }
 }

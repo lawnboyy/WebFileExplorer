@@ -12,48 +12,51 @@ namespace WebFileExplorer.Repositories
 {
   public interface IFileRepository
   {
-    Task<byte[]> RetrieveFile(string filePath);
-    IEnumerable<File> Search(string term);
-    IEnumerable<File> SearchBfs(string term);
-    IEnumerable<File> SearchBfsParallel(string term);
-    IEnumerable<File> SearchRecursiveParallel(string term);
+    bool CopyFile(string sourcePath, string destinationPath);
+    IEnumerable<File> Search(string term, string rootPath);
+    IEnumerable<File> SearchBfs(string term, string rootPath);
+    IEnumerable<File> SearchBfsParallel(string term, string rootPath);
+    IEnumerable<File> SearchRecursiveParallel(string term, string rootPath);
   }
 
   public class FileRepository : IFileRepository
   {
-    private readonly string _rootFilePath;
 
-    public FileRepository(IConfiguration config)
+    public FileRepository()
     {
-      _rootFilePath = config["RootFilePath"];
     }
 
-    public async Task<byte[]> RetrieveFile(string path)
+    public bool CopyFile(string sourcepath, string destinationPath)
     {
-      var fullPath = $"{_rootFilePath}\\{path}";
-      using var stream = System.IO.File.Open(fullPath, FileMode.Open);
-      byte[] result = new byte[stream.Length];
-      await stream.ReadAsync(result, 0, (int)stream.Length);
-      return result;
+      try
+      {
+        System.IO.File.Copy(sourcepath, destinationPath);
+        return true;
+      }
+      catch (Exception ex)
+      {
+        // TODO: Log exception...
+        return false;
+      }
     }
 
-    public IEnumerable<File> Search(string term)
+    public IEnumerable<File> Search(string term, string rootPath)
     {
       // Built in search; easy peazy...
-      var info = new DirectoryInfo(_rootFilePath);
+      var info = new DirectoryInfo(rootPath);
       return info
         .GetFiles(term, SearchOption.AllDirectories)
         .Select(f => new File
         {
           Name = f.Name,
-          FullName = StripRoot(f.FullName, _rootFilePath)
+          FullName = StripRoot(f.FullName, rootPath)
         });
     }
 
-    public IEnumerable<File> SearchBfsParallel(string term)
+    public IEnumerable<File> SearchBfsParallel(string term, string rootPath)
     {
       var queue = new ConcurrentQueue<string>();
-      queue.Enqueue(_rootFilePath);
+      queue.Enqueue(rootPath);
       var results = new ConcurrentBag<File>();
 
       while (queue.Count > 0)
@@ -81,10 +84,10 @@ namespace WebFileExplorer.Repositories
       return results;
     }
 
-    public IEnumerable<File> SearchRecursiveParallel(string term)
+    public IEnumerable<File> SearchRecursiveParallel(string term, string rootPath)
     {
       var files = new ConcurrentBag<File>();
-      SearchRecursiveParallel(term, new DirectoryInfo(_rootFilePath), files);
+      SearchRecursiveParallel(term, new DirectoryInfo(rootPath), files);
       return files;
     }
 
@@ -101,11 +104,11 @@ namespace WebFileExplorer.Repositories
       });
     }
 
-    public IEnumerable<File> SearchBfs(string term)
+    public IEnumerable<File> SearchBfs(string term, string rootPath)
     {
       var files = new List<File>();
       var queue = new Queue<string>();
-      queue.Enqueue(_rootFilePath);
+      queue.Enqueue(rootPath);
 
       while (queue.Count > 0)
       {

@@ -3,6 +3,7 @@ import { FileListItem } from "./fileListItem.js";
 import { Button } from "./button.js";
 import { fetchDirectory } from "../api/api.js";
 import { updatePath } from "../utilities/appStateUtility.js";
+import { subscribeToContentUpdate } from "../utilities/appStateUtility.js";
 
 export class DirectoryContentList {
   #container;
@@ -17,11 +18,17 @@ export class DirectoryContentList {
     this.#contentList.id = this.id;
     this.#buildContent(path);
 
+    subscribeToContentUpdate(this.#updateContent);
+
     window.onpopstate = (event) => {
       if (event.state) {
         this.#buildContent(event.state.data);
       }
     };
+  }
+
+  #updateContent = () => {
+    this.#buildContent(this.#directory.fullName);
   }
 
   #buildContent(path) {

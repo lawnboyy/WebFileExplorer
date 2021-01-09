@@ -1,5 +1,5 @@
 ﻿import { Button } from "./button.js";
-import { getAppState } from "../utilities/appStateUtility.js";
+import { contentUpdated, getAppState } from "../utilities/appStateUtility.js";
 import { uploadFile } from "../api/api.js";
 
 export const UploadTool = (id) => {
@@ -17,7 +17,9 @@ export const UploadTool = (id) => {
 
   const onUploadClicked = () => {
     const state = getAppState();
-    uploadFile(state.path, file);
+    uploadFile(state.path, file).then((response) => {
+      contentUpdated();
+    });
   };
 
   const uploadButton = Button("upload-btn", "Upload", onUploadClicked);

@@ -34,6 +34,8 @@ export const uploadFile = async (path, file) => {
   formData.append("files", file);
   const response = await fetch(path ? `/files/upload?path=${path}` : `/files/upload`, {
     method: "POST",
-    body: formData    
+    body: formData
   });
+
+  return response;
 };

@@ -3,7 +3,9 @@ import { decodeUrl } from "../utilities/urlUtility.js";
 
 export const getAppState = () => {
   // Deep link to current path...
-  const path = window.location.pathname && window.location.pathname !== "/" ? decodeUrl(window.location.pathname) : "";
+  const path = window.location.pathname && window.location.pathname !== "/"
+    ? decodeUrl(window.location.pathname)
+    : "";
 
   // TODO: Add deep linking for additional app state...
 
@@ -15,4 +17,15 @@ export const getAppState = () => {
 export const updatePath = (path) => {
   const encodedPath = encodeUrl(path);
   window.history.pushState({ data: path }, "", encodedPath === "" ? "/" : encodedPath);
+};
+
+let contentUpdatedCallbacks = [];
+export const subscribeToContentUpdate = (handler) => {
+  contentUpdatedCallbacks.push(handler);
+};
+
+export const contentUpdated = () => {
+  for (var i = 0; i < contentUpdatedCallbacks.length; i++) {
+    contentUpdatedCallbacks[i]();
+  }
 };

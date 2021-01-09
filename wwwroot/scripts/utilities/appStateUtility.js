@@ -24,8 +24,15 @@ export const subscribeToContentUpdate = (handler) => {
   contentUpdatedCallbacks.push(handler);
 };
 
+export const unsubscribeFromContentUpdate = (handler) => {
+  for (let i = 0; i < contentUpdatedCallbacks.length; i++) {
+    if (contentUpdatedCallbacks[i] === handler)
+      contentUpdatedCallbacks.splice(i, 1);
+  }
+};
+
 export const contentUpdated = () => {
-  for (var i = 0; i < contentUpdatedCallbacks.length; i++) {
+  for (let i = 0; i < contentUpdatedCallbacks.length; i++) {
     contentUpdatedCallbacks[i]();
   }
 };

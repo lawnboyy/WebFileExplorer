@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data.OleDb;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using WebFileExplorer.Models;
 using static WebFileExplorer.Utilities.PathUtility;
@@ -17,7 +18,6 @@ namespace WebFileExplorer.Repositories
     Task AddFile(string path, IFormFile file);
     void CopyFile(string sourcePath, string destinationPath);
     IEnumerable<File> Search(string term, string rootPath);
-    IEnumerable<File> SearchByIndex(string term, string rootPath);
     IEnumerable<File> SearchBfs(string term, string rootPath);
     IEnumerable<File> SearchBfsParallel(string term, string rootPath);
     IEnumerable<File> SearchRecursiveParallel(string term, string rootPath);
@@ -41,12 +41,12 @@ namespace WebFileExplorer.Repositories
       System.IO.File.Copy(sourcepath, destinationPath);
     }
 
-    public IEnumerable<File> SearchByIndex(string term, string rootPath)
+    private IEnumerable<File> SearchByIndex(string term, string rootPath)
     {
       var connection = new OleDbConnection(@"Provider=Search.CollatorDSO;Extended Properties=""Application=Windows""");
 
       // File name search (case insensitive), also searches sub directories
-      var query1 = $"SELECT System.ItemName FROM SystemIndex WHERE scope ='file:C:/' AND System.ItemName LIKE '%{term}%'";
+      var query1 = $"SELECT System.ItemName, System.ItemPathDisplay, System.Size FROM SystemIndex WHERE scope ='file:{rootPath.Replace("\\", "/")}' AND System.ItemName LIKE '%{term}%' AND System.ItemType != 'Directory'";
 
       connection.Open();
 
@@ -58,7 +58,9 @@ namespace WebFileExplorer.Repositories
         {
           files.Add(new File
           {
-            Name = r.GetString(0)
+            Name = r.GetString(0),
+            FullName = StripRoot(r.GetString(1), rootPath),
+            SizeInBytes = Convert.ToInt64((decimal)r.GetValue(2))
           });
         }
       }
@@ -69,15 +71,22 @@ namespace WebFileExplorer.Repositories
 
     public IEnumerable<File> Search(string term, string rootPath)
     {
-      // Built in search; easy peazy...
-      var info = new DirectoryInfo(rootPath);
-      return info
-        .GetFiles(term, SearchOption.AllDirectories)
-        .Select(f => new File
-        {
-          Name = f.Name,
-          FullName = StripRoot(f.FullName, rootPath)
-        });
+      if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+      {
+        return SearchByIndex(term, rootPath);
+      }
+      else
+      {
+        // Built in search; easy peazy...
+        var info = new DirectoryInfo(rootPath);
+        return info
+          .GetFiles(term, SearchOption.AllDirectories)
+          .Select(f => new File
+          {
+            Name = f.Name,
+            FullName = StripRoot(f.FullName, rootPath)
+          });
+      }
     }
 
     public IEnumerable<File> SearchBfsParallel(string term, string rootPath)

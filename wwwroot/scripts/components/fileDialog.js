@@ -9,6 +9,7 @@ import { UploadTool } from "./uploadTool.js";
 export const FileDialog = (id, text) => {
   const dialog = document.createElement("dialog");
   dialog.id = id;
+  dialog.style = "width: 50%; height: 75%; overflow: auto";
   dialog.innerHTML = text;
 
   const onCloseClicked = () => {

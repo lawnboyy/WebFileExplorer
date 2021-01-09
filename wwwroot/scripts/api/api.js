@@ -28,3 +28,12 @@ export const search = async (term) => {
   const response = await fetch(`/files?term=${term}`);
   return response.json();
 };
+
+export const uploadFile = async (path, file) => {
+  const formData = new FormData();
+  formData.append("files", file);
+  const response = await fetch(path ? `/files/upload?path=${path}` : `/files/upload`, {
+    method: "POST",
+    body: formData    
+  });
+};

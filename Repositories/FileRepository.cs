@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -12,7 +13,8 @@ namespace WebFileExplorer.Repositories
 {
   public interface IFileRepository
   {
-    bool CopyFile(string sourcePath, string destinationPath);
+    Task AddFile(string path, IFormFile file);
+    void CopyFile(string sourcePath, string destinationPath);
     IEnumerable<File> Search(string term, string rootPath);
     IEnumerable<File> SearchBfs(string term, string rootPath);
     IEnumerable<File> SearchBfsParallel(string term, string rootPath);
@@ -26,18 +28,15 @@ namespace WebFileExplorer.Repositories
     {
     }
 
-    public bool CopyFile(string sourcepath, string destinationPath)
+    public async Task AddFile(string path, IFormFile file)
     {
-      try
-      {
-        System.IO.File.Copy(sourcepath, destinationPath);
-        return true;
-      }
-      catch (Exception ex)
-      {
-        // TODO: Log exception...
-        return false;
-      }
+      using var fileStream = System.IO.File.Create($"{path}\\{file.FileName}");
+      await file.CopyToAsync(fileStream);
+    }
+
+    public void CopyFile(string sourcepath, string destinationPath)
+    {
+      System.IO.File.Copy(sourcepath, destinationPath);
     }
 
     public IEnumerable<File> Search(string term, string rootPath)

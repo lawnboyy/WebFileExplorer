@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data.OleDb;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace WebFileExplorer.Repositories
     Task AddFile(string path, IFormFile file);
     void CopyFile(string sourcePath, string destinationPath);
     IEnumerable<File> Search(string term, string rootPath);
+    IEnumerable<File> SearchByIndex(string term, string rootPath);
     IEnumerable<File> SearchBfs(string term, string rootPath);
     IEnumerable<File> SearchBfsParallel(string term, string rootPath);
     IEnumerable<File> SearchRecursiveParallel(string term, string rootPath);
@@ -37,6 +39,32 @@ namespace WebFileExplorer.Repositories
     public void CopyFile(string sourcepath, string destinationPath)
     {
       System.IO.File.Copy(sourcepath, destinationPath);
+    }
+
+    public IEnumerable<File> SearchByIndex(string term, string rootPath)
+    {
+      var connection = new OleDbConnection(@"Provider=Search.CollatorDSO;Extended Properties=""Application=Windows""");
+
+      // File name search (case insensitive), also searches sub directories
+      var query1 = $"SELECT System.ItemName FROM SystemIndex WHERE scope ='file:C:/' AND System.ItemName LIKE '%{term}%'";
+
+      connection.Open();
+
+      var command = new OleDbCommand(query1, connection);
+      var files = new List<File>();
+      using (var r = command.ExecuteReader())
+      {
+        while (r.Read())
+        {
+          files.Add(new File
+          {
+            Name = r.GetString(0)
+          });
+        }
+      }
+
+      connection.Close();
+      return files;
     }
 
     public IEnumerable<File> Search(string term, string rootPath)

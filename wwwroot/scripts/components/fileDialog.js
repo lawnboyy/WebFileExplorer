@@ -29,6 +29,9 @@ export const FileDialog = (id, text) => {
   // Add search control
   let results = null;
   const onSearchToolClicked = (term) => {
+    if (results) {
+      dialog.removeChild(results);
+    }
     results = SearchResults("search-results", term);
     dirContentsContainer.style = "display: none";
     dialog.appendChild(results);

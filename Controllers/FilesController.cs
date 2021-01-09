@@ -29,7 +29,7 @@ namespace WebFileExplorer.Controllers
     [HttpGet]
     public IEnumerable<File> Search([FromQuery] string term)
     {
-      return _fileRepo.Search(term, _rootFilePath);
+      return _fileRepo.SearchByIndex(term, _rootFilePath);
     }
 
     [HttpPost("download")]

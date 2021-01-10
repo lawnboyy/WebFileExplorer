@@ -46,7 +46,7 @@ namespace WebFileExplorer.Repositories
 
     public void CopyFile(string sourcepath, string destinationPath)
     {
-      System.IO.File.Copy(sourcepath, destinationPath);
+      System.IO.File.Copy(sourcepath, destinationPath, true);
     }
 
     public async Task IndexFiles(string rootPath)

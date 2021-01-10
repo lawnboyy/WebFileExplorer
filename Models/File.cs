@@ -1,11 +1,13 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebFileExplorer
 {
   public class File
   {
-    public string Name { get; init; } = "";
+    [Key]
     public string FullName { get; init; } = "";
+    public string Name { get; init; } = "";
     public long SizeInBytes { get; init; }
   }
 }

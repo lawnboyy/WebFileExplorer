@@ -36,7 +36,7 @@ namespace WebFileExplorer.Controllers
     public IActionResult Download([FromBody] File file)
     {
       string fullPath = $"{_rootFilePath}\\{file.FullName}";
-      var downloadFilePath = $"{_downloadPath}\\downloads\\{file.Name}";
+      var downloadFilePath = $"{_downloadPath}\\downloads\\{file.FullName}";
 
       try
       {

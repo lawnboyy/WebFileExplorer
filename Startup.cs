@@ -12,6 +12,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SpaServices;
 using WebFileExplorer.Repositories;
+using WebFileExplorer.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebFileExplorer
 {
@@ -27,8 +29,14 @@ namespace WebFileExplorer
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+      // Add database context for file indexing...
+      services.AddDbContext<FileIndexContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+      // Add repo interfaces
       services.AddScoped<IDirectoryRepository, DirectoryRepository>();
       services.AddScoped<IFileRepository, FileRepository>();
+
       services.AddControllers();
       services.AddSpaStaticFiles(config => config.RootPath = "wwwroot");
     }

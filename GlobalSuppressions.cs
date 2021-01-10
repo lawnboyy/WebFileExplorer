@@ -5,4 +5,5 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:WebFileExplorer.Repositories.FileRepository.SearchByIndex(System.String,System.String)~System.Collections.Generic.IEnumerable{WebFileExplorer.File}")]
+[assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:WebFileExplorer.Repositories.FileRepository.SearchByWindowsIndex(System.String,System.String)~System.Collections.Generic.IEnumerable{WebFileExplorer.File}")]
+[assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:WebFileExplorer.Repositories.FileRepository.IsRootIndexedInWindows(System.String)~System.Boolean")]

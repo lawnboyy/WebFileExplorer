@@ -12,8 +12,7 @@
   const path = result.downloadPath;
   const link = document.createElement("a");
   link.href = path;
-  const parts = path.split(["/"]);
-  link.setAttribute("download", parts[parts.length - 1]);
+  link.setAttribute("download", file.name);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

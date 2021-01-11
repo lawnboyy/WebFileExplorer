@@ -8,6 +8,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using WebFileExplorer.Repositories;
+using WebFileExplorer.Utilities;
 
 namespace WebFileExplorer.Controllers
 {
@@ -27,21 +28,29 @@ namespace WebFileExplorer.Controllers
     }
 
     [HttpGet]
-    public IEnumerable<File> Search([FromQuery] string term)
+    public async Task<IActionResult> Search([FromQuery] string term)
     {
-      return _fileRepo.Search(term, _rootFilePath);
+      try
+      {
+        return Ok(await _fileRepo.Search(term, _rootFilePath));
+      }
+      catch (Exception)
+      {
+        return StatusCode(500, "There was a problem searching the files.");
+      }
     }
 
     [HttpPost("download")]
     public IActionResult Download([FromBody] File file)
     {
-      string fullPath = $"{_rootFilePath}\\{file.FullName}";
-      var downloadFilePath = $"{_downloadPath}\\downloads\\{file.FullName}";
-
       try
       {
+        string fullPath = $"{_rootFilePath}\\{file.FullName}";
+        string generatedName = PathUtility.AddTimestamp(file.Name);
+        var downloadFilePath = $"{_downloadPath}\\downloads\\{generatedName}";
         _fileRepo.CopyFile(fullPath, downloadFilePath);
-        return Ok(new { DownloadPath = $"downloads/{file.Name}" });
+
+        return Ok(new { DownloadPath = $"downloads/{generatedName}" });
       }
       catch (Exception)
       {
@@ -52,12 +61,19 @@ namespace WebFileExplorer.Controllers
     [HttpPost("upload")]
     public async Task<IActionResult> Upload([FromQuery] string? path, [FromForm] IList<IFormFile> files)
     {
-      if (files.Count > 0)
+      try
       {
-        string fullPath = path != null ? $"{_rootFilePath}\\{path}" : _rootFilePath;
-        await _fileRepo.AddFile(fullPath, files[0]);
+        if (files.Count > 0)
+        {
+          string fullPath = path != null ? $"{_rootFilePath}\\{path}" : _rootFilePath;
+          await _fileRepo.AddFile(fullPath, files[0]);
+        }
+        return Ok();
       }
-      return Ok();
+      catch (Exception)
+      {
+        return StatusCode(500, "There was a problem uploaing the file.");
+      }
     }
   }
 }

@@ -18,7 +18,7 @@ namespace WebFileExplorer.Repositories
     Task AddFile(string path, IFormFile file);
     void CopyFile(string sourcePath, string destinationPath);
     Task IndexFiles(string rootPath);
-    IEnumerable<File> Search(string term, string rootPath);
+    Task<IEnumerable<File>> Search(string term, string rootPath);
     [Obsolete]
     IEnumerable<File> SearchBfs(string term, string rootPath);
     [Obsolete]
@@ -59,7 +59,7 @@ namespace WebFileExplorer.Repositories
       _indexing = false;
     }
 
-    public IEnumerable<File> Search(string term, string rootPath)
+    public async Task<IEnumerable<File>> Search(string term, string rootPath)
     {
       if (_indexing)
       {
@@ -86,7 +86,7 @@ namespace WebFileExplorer.Repositories
       }
       else
       {
-        return SearchByIndex(term);
+        return await SearchByIndex(term);
       }
     }
 
@@ -210,9 +210,9 @@ namespace WebFileExplorer.Repositories
       return files;
     }
 
-    private IEnumerable<File> SearchByIndex(string term)
+    private async Task<IEnumerable<File>> SearchByIndex(string term)
     {
-      return _index.Files.Where(f => f.Name.Contains(term));
+      return await _index.Files.Where(f => f.Name.Contains(term)).ToListAsync();
     }
 
     private bool IsRootIndexedInWindows(string rootPath)

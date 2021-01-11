@@ -24,5 +24,14 @@ namespace WebFileExplorer.Utilities
       }
       return "";
     }
+
+    public static string AddTimestamp(string fileName)
+    {
+      var extensionIndex = fileName.LastIndexOf('.');
+      var name = fileName.Substring(0, extensionIndex + 1);
+      var extension = fileName.Substring(extensionIndex);
+
+      return $"{name}{DateTime.UtcNow.Ticks}{extension}";
+    }
   }
 }

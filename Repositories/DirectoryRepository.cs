@@ -10,15 +10,30 @@ namespace WebFileExplorer.Repositories
     Models.Directory GetContents(string path);
   }
 
+  /// <summary>
+  /// Interacts with the file system scoped to the root path. Provides interface
+  /// for pulling the contents of a directory.
+  /// </summary>
   public class DirectoryRepository : IDirectoryRepository
   {
     private readonly string _rootFilePath;
 
+    /// <summary>
+    /// Constructor that takes the injected configuration as a parameter to
+    /// pull the root path.
+    /// </summary>
+    /// <param name="config">IConfiguration instance</param>
     public DirectoryRepository(IConfiguration config)
     {
       _rootFilePath = config["RootFilePath"];
     }
 
+    /// <summary>
+    /// Retrieves the contents of a directory as a directory object that
+    /// encapsulates all the sub-directories and files it contains.
+    /// </summary>
+    /// <param name="path">The directory path</param>
+    /// <returns>Directory instance</returns>
     public Models.Directory GetContents(string path)
     {
       var fullPath = $"{_rootFilePath}\\{path}";

@@ -13,16 +13,66 @@ using static WebFileExplorer.Utilities.PathUtility;
 
 namespace WebFileExplorer.Repositories
 {
+  /// <summary>
+  /// File repository interface. Defines interface methods for interacting
+  /// with the collection of files contained within the file system. Provides
+  /// methods for search, copying, deleting, and indexing.
+  /// </summary>
   public interface IFileRepository
   {
+    /// <summary>
+    /// Adds a new file to the file system at the given path.
+    /// </summary>
+    /// <param name="path">The directory path that will contain the new file</param>
+    /// <param name="file">The new file to add</param>
+    /// <returns>A Task</returns>
     Task AddFile(string path, IFormFile file);
+    /// <summary>
+    /// Copies a file from a source path to a destination path.
+    /// </summary>
+    /// <param name="sourcePath">Source path of the file</param>
+    /// <param name="destinationPath">Destination path of the file</param>
     void CopyFile(string sourcePath, string destinationPath);
+    /// <summary>
+    /// Builds a file search index.
+    /// </summary>
+    /// <param name="rootPath">The root path of the searchable index</param>
+    /// <returns>A Task</returns>
     Task IndexFiles(string rootPath);
+    /// <summary>
+    /// File search method. Utilizes the built index if it's not currently indexing.
+    /// Otherwise it attempts to use the Windows index if it is running on a windows
+    /// platform and the root directory is indexed. Finally, if none of those options
+    /// are available, it will use a recursive directory search.
+    /// </summary>
+    /// <param name="term">The term to search for.</param>
+    /// <param name="rootPath">The root path to search</param>
+    /// <returns></returns>
     Task<IEnumerable<File>> Search(string term, string rootPath);
+    /// <summary>
+    /// Breadth first search. Obsolete due to performance issues.
+    /// </summary>
+    /// <param name="term"></param>
+    /// <param name="rootPath"></param>
+    /// <returns></returns>
     [Obsolete]
     IEnumerable<File> SearchBfs(string term, string rootPath);
+    /// <summary>
+    /// Breadth first search done performed in parallel at each
+    /// level of the directory tree. Obsolete due to performance
+    /// issues.
+    /// </summary>
+    /// <param name="term"></param>
+    /// <param name="rootPath"></param>
+    /// <returns></returns>
     [Obsolete]
     IEnumerable<File> SearchBfsParallel(string term, string rootPath);
+    /// <summary>
+    /// Recursive search done in parallel. Obsolete due to performance issues.
+    /// </summary>
+    /// <param name="term"></param>
+    /// <param name="rootPath"></param>
+    /// <returns></returns>
     [Obsolete]
     IEnumerable<File> SearchRecursiveParallel(string term, string rootPath);
   }
@@ -90,15 +140,7 @@ namespace WebFileExplorer.Repositories
       }
     }
 
-    /// <summary>
-    /// Performs a breadth-first search, pulling files at each tree level
-    /// in parallel. While significantly faster than a non-parallel BFS, it
-    /// is still slower than using the built-in DirectoryInfo.GetFiles() with
-    /// the option: SearchOption.AllDirectories.
-    /// </summary>
-    /// <param name="term">The search term</param>
-    /// <param name="rootPath">The root path to search</param>
-    /// <returns>Collection of files</returns>
+    #region Obsolete Search Methods
     [Obsolete]
     public IEnumerable<File> SearchBfsParallel(string term, string rootPath)
     {
@@ -132,7 +174,8 @@ namespace WebFileExplorer.Repositories
     }
 
     /// <summary>
-    /// 
+    /// Recursive directory tree search performed in parallel for each set
+    /// of subdirectories. Obsolete due to performance issues.
     /// </summary>
     /// <param name="term"></param>
     /// <param name="rootPath"></param>
@@ -145,6 +188,12 @@ namespace WebFileExplorer.Repositories
       return files;
     }
 
+    /// <summary>
+    /// Simple Breadth-first search. Obsolete due to performance issues.
+    /// </summary>
+    /// <param name="term"></param>
+    /// <param name="rootPath"></param>
+    /// <returns></returns>
     [Obsolete]
     public IEnumerable<File> SearchBfs(string term, string rootPath)
     {
@@ -173,6 +222,7 @@ namespace WebFileExplorer.Repositories
 
       return files;
     }
+    #endregion
     #endregion
 
     #region Private Methods
@@ -277,7 +327,6 @@ namespace WebFileExplorer.Repositories
       });
     }
     #endregion
-
 
     //    File Search Performance Tests
 

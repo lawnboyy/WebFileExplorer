@@ -47,12 +47,18 @@ namespace WebFileExplorer.Controllers
       {
         string fullPath = $"{_rootFilePath}\\{file.FullName}";
         string generatedName = PathUtility.AddTimestamp(file.Name);
+        
         var downloadFilePath = $"{_downloadPath}\\downloads\\{generatedName}";
+        
+        // If the downloads directory doesn't exist, then create it.
+        var fileInfo = new FileInfo(downloadFilePath);
+        fileInfo.Directory?.Create();
+        
         _fileRepo.CopyFile(fullPath, downloadFilePath);
 
         return Ok(new { DownloadPath = $"downloads/{generatedName}" });
       }
-      catch (Exception)
+      catch (Exception ex)
       {
         return StatusCode(500, "There was a problem downloading the file.");
       }

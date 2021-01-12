@@ -34,10 +34,16 @@ namespace WebFileExplorer.Repositories
     /// <param name="destinationPath">Destination path of the file</param>
     void CopyFile(string sourcePath, string destinationPath);
     /// <summary>
+    /// Deletes the file at the given path if it exists.
+    /// </summary>
+    /// <param name="filePath">The path to the file to delete</param>
+    void DeleteFile(string filePath);
+    /// <summary>
     /// Builds a file search index.
     /// </summary>
     /// <param name="rootPath">The root path of the searchable index</param>
     /// <returns>A Task</returns>
+
     Task IndexFiles(string rootPath);
     /// <summary>
     /// File search method. Utilizes the built index if it's not currently indexing.
@@ -97,6 +103,11 @@ namespace WebFileExplorer.Repositories
     public void CopyFile(string sourcepath, string destinationPath)
     {
       System.IO.File.Copy(sourcepath, destinationPath, true);
+    }
+
+    public void DeleteFile(string filePath)
+    {
+      System.IO.File.Delete(filePath);
     }
 
     public async Task IndexFiles(string rootPath)

@@ -47,13 +47,13 @@ namespace WebFileExplorer.Controllers
       {
         string fullPath = $"{_rootFilePath}\\{file.FullName}";
         string generatedName = PathUtility.AddTimestamp(file.Name);
-        
+
         var downloadFilePath = $"{_downloadPath}\\downloads\\{generatedName}";
-        
+
         // If the downloads directory doesn't exist, then create it.
         var fileInfo = new FileInfo(downloadFilePath);
         fileInfo.Directory?.Create();
-        
+
         _fileRepo.CopyFile(fullPath, downloadFilePath);
 
         return Ok(new { DownloadPath = $"downloads/{generatedName}" });
@@ -79,6 +79,22 @@ namespace WebFileExplorer.Controllers
       catch (Exception)
       {
         return StatusCode(500, "There was a problem uploaing the file.");
+      }
+    }
+
+    [HttpDelete]
+    public IActionResult Delete([FromQuery] string path)
+    {
+      try
+      {
+        string fullPath = path != null ? $"{_rootFilePath}\\{path}" : _rootFilePath;
+        _fileRepo.DeleteFile(fullPath);
+
+        return Ok();
+      }
+      catch (Exception)
+      {
+        return StatusCode(500, "There was a problem deleting the file.");
       }
     }
   }

@@ -35,7 +35,7 @@ namespace WebFileExplorer.Controllers
       {
         return Ok(await _fileRepo.Search(term, _rootFilePath));
       }
-      catch (Exception)
+      catch (Exception ex)
       {
         return StatusCode(500, "There was a problem searching the files.");
       }

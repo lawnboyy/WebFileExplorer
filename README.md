@@ -35,3 +35,11 @@ Upload: Uploads a file if one is selected.
 Download: The download buttons are to the left of the file name. Clicking it will download the file.
 
 Delete: The delete button is the trash icon between the download and the file name. It will confirm that you want to delete.
+
+## Known Issues
+
+1) Some special characters in directory names may break deep linking. Using a period '.' is known to break deep linking. There may
+be other characters that break it as well.
+
+2) Search will not work if the index has not been built yet and there are files or folders that the server cannot access due to
+permissions.

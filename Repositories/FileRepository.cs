@@ -254,16 +254,25 @@ namespace WebFileExplorer.Repositories
         var count = queue.Count;
         for (int i = 0; i < count; i++)
         {
-          var path = queue.Dequeue();
-          var dirInfo = new DirectoryInfo(path);
-          foreach (var file in dirInfo.GetFiles())
-          {
-            files.Add(new File { FullName = StripRoot(file.FullName, rootPath), Name = file.Name, SizeInBytes = file.Length });
-          }
 
-          foreach (var subDir in System.IO.Directory.GetDirectories(path))
+          var path = queue.Dequeue();
+
+          try
           {
-            queue.Enqueue(subDir);
+            var dirInfo = new DirectoryInfo(path);
+            foreach (var file in dirInfo.GetFiles())
+            {
+              files.Add(new File { FullName = StripRoot(file.FullName, rootPath), Name = file.Name, SizeInBytes = file.Length });
+            }
+
+            foreach (var subDir in System.IO.Directory.GetDirectories(path))
+            {
+              queue.Enqueue(subDir);
+            }
+          }
+          catch (Exception)
+          {
+            // If something goes wrong, like a permissions issue, just catch and move on...
           }
         }
       }

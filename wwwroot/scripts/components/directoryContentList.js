@@ -54,14 +54,11 @@ export class DirectoryContentList {
    * @param {string} path The path of the directory to display.
    */
   // TODO: Look at using async/await for this.
-  #buildContent(path) {
-    const _this = this;
-    fetchDirectory(path)
-      .then((dir) => {
-        _this.#directory = dir;
-        _this.#render();
-        updatePath(_this.#directory.fullName)
-      });
+  async #buildContent(path) {
+    const dir = await fetchDirectory(path)
+    this.#directory = dir;
+    this.#render();
+    updatePath(this.#directory.fullName);
   }
 
   /**

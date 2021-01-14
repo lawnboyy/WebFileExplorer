@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.SpaServices;
 using WebFileExplorer.Repositories;
 using WebFileExplorer.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace WebFileExplorer
 {
@@ -51,6 +54,23 @@ namespace WebFileExplorer
 
       app.UseHttpsRedirection();
       app.UseFileServer();
+
+      var provider = new FileExtensionContentTypeProvider();
+      // Add whatever file extensions you want to serve.
+      provider.Mappings[".docx"] = "application/x-msdownload";
+      provider.Mappings[".doc"] = "application/x-msdownload";
+      provider.Mappings[".cs"] = "application/x-msdownload";
+      provider.Mappings[".txt"] = "application/x-msdownload";
+      provider.Mappings[".sql"] = "application/x-msdownload";
+
+      app.UseStaticFiles(new StaticFileOptions
+      {
+        FileProvider = new PhysicalFileProvider(
+              Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "downloads")),
+        RequestPath = "/downloads",
+        ContentTypeProvider = provider
+      });
+
       app.UseRouting();
 
 

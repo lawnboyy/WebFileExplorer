@@ -5,6 +5,8 @@ import { SearchTool } from "./searchTool.js";
 import { SearchResults } from "./searchResults.js";
 import { UploadTool } from "./uploadTool.js";
 
+const searchResultsId = "search-results";
+
 /**
  * Factory function that creates and returns an HTML dialog for the file management.
  * @param {string} id This string will be used for the HTML id.
@@ -40,9 +42,11 @@ export const FileDialog = (id, text) => {
   // UI and displays the results of the file search.
   const onSearchToolClicked = (term) => {
     if (results) {
-      dialog.removeChild(results);
+      const resultsElement = document.getElementById(searchResultsId);
+      if (resultsElement)
+        dialog.removeChild(resultsElement);
     }
-    results = SearchResults("search-results", term);
+    results = SearchResults(searchResultsId, term);
     dirContentsContainer.style = "display: none";
     dialog.appendChild(results);
   };
@@ -51,7 +55,9 @@ export const FileDialog = (id, text) => {
   // Add browse button
   const onBrowseClicked = () => {
     if (results) {
-      dialog.removeChild(results);
+      const resultsElement = document.getElementById(searchResultsId);
+      if (resultsElement)
+        dialog.removeChild(resultsElement);
     }
 
     // Un-hide the directory contents...

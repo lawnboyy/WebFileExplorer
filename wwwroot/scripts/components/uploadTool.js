@@ -26,9 +26,15 @@ export const UploadTool = (id) => {
   // TODO: Check for the existence of a file here.
   const onUploadClicked = () => {
     const state = getAppState();
-    uploadFile(state.path, file).then((response) => {
-      contentUpdated();
-    });
+    if (file) {
+      uploadFile(state.path, file).then((response) => {
+        contentUpdated();
+        // Clear the file...
+        file = null;
+      });
+    } else {
+      alert("No file has been selected!");
+    }
   };
 
   const uploadButton = Button("upload-btn", "Upload", onUploadClicked);

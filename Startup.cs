@@ -57,11 +57,13 @@ namespace WebFileExplorer
 
       var provider = new FileExtensionContentTypeProvider();
       // Add whatever file extensions you want to serve.
-      provider.Mappings[".docx"] = "application/x-msdownload";
-      provider.Mappings[".doc"] = "application/x-msdownload";
-      provider.Mappings[".cs"] = "application/x-msdownload";
-      provider.Mappings[".txt"] = "application/x-msdownload";
-      provider.Mappings[".sql"] = "application/x-msdownload";
+      var extensions = Configuration.GetSection("DownloadableFileExtensions").AsEnumerable();
+
+      foreach (var ext in extensions)
+      {
+        if (ext.Value != null)
+          provider.Mappings[ext.Key.Split(new char[] { ':' })[1]] = ext.Value;
+      }
 
       app.UseStaticFiles(new StaticFileOptions
       {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
@@ -20,10 +21,10 @@ namespace WebFileExplorer.Controllers
     private readonly string _rootFilePath;
     private readonly string _downloadPath;
 
-    public FilesController(IConfiguration config, IFileRepository fileRepo)
+    public FilesController(IConfiguration config, IFileRepository fileRepo, IWebHostEnvironment env)
     {
       _fileRepo = fileRepo;
-      _downloadPath = config["DownloadRootPath"];
+      _downloadPath = $"{env.ContentRootPath}\\wwwroot";
       _rootFilePath = config["RootFilePath"];
     }
 

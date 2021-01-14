@@ -27,7 +27,7 @@ namespace WebFileExplorer.Utilities
     /// <returns>Relative path</returns>
     public static string StripRoot(string fullPath, string rootPath)
     {
-      var parts = fullPath.Split(rootPath);
+      var parts = fullPath.ToLower().Split(rootPath.ToLower());
       // Remove the initial slashes
       if (parts.Length > 0)
       {

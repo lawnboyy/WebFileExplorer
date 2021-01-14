@@ -7,6 +7,12 @@ namespace WebFileExplorer.Repositories
 {
   public interface IDirectoryRepository
   {
+    /// <summary>
+    /// Retrieves the contents of a directory as a directory object that
+    /// encapsulates all the sub-directories and files it contains.
+    /// </summary>
+    /// <param name="path">The directory path</param>
+    /// <returns>Directory instance</returns>
     Models.Directory GetContents(string path);
   }
 

@@ -13,6 +13,7 @@ namespace WebFileExplorer.Models
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+      // Add index to file name column...
       modelBuilder.Entity<File>()
           .HasIndex(f => f.Name);
     }

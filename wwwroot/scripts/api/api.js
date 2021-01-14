@@ -1,4 +1,16 @@
 ﻿/**
+ * Makes an API call to delete the given file
+ * @param {string} path Full path to the file to delete.
+ */
+export const deleteFile = async (path) => {
+  const response = await fetch(`/files?path=${path}`, {
+    method: "DELETE",
+  });
+
+  return response;
+};
+
+/**
  * Makes an API call to download a file from the server.
  * @param {object} file The file object to download.
  * @param {string} file.name The name of the file.

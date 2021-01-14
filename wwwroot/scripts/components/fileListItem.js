@@ -1,6 +1,8 @@
-﻿import { DownloadButton } from "./downloadButton.js";
-import { downloadFile } from "../api/api.js";
+﻿import { DeleteButton } from "./deleteButton.js";
+import { DownloadButton } from "./downloadButton.js";
+import { deleteFile, downloadFile } from "../api/api.js";
 import { formatDiskSize } from "../utilities/fileUtility.js";
+import { contentUpdated } from "../utilities/appStateUtility.js";
 
 /**
  * Factory function that creates and returns a file list item as an HTML element.
@@ -28,6 +30,21 @@ export const FileListItem = (id, file) => {
   downloadButtonDiv.style = "margin-right: 5px";
   downloadButtonDiv.appendChild(DownloadButton(`${file.fullName}-download-btn`, onDownloadClicked));
   containerDiv.appendChild(downloadButtonDiv);
+
+  // Delete click handler that will delete the file.
+  const onDeleteClicked = async () => {
+    const confirmed = confirm("Are you sure you want to delete this file?");
+    if (confirmed) {
+      await deleteFile(file.fullName);
+      contentUpdated();
+    }
+  };
+
+  // Inner div to contain the delete button
+  const deleteButtonDiv = document.createElement("div");
+  deleteButtonDiv.style = "margin-right: 5px";
+  deleteButtonDiv.appendChild(DeleteButton(`${file.fullName}-delete-btn`, onDeleteClicked));
+  containerDiv.appendChild(deleteButtonDiv);
 
   // Inner div that will contain the file name
   const fileNameDiv = document.createElement("div");

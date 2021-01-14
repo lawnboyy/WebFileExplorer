@@ -23,15 +23,13 @@ export const UploadTool = (id) => {
 
   // Grabs the current path from the app state and uploads the
   // given file.
-  // TODO: Check for the existence of a file here.
-  const onUploadClicked = () => {
+  const onUploadClicked = async () => {
     const state = getAppState();
     if (file) {
-      uploadFile(state.path, file).then((response) => {
-        contentUpdated();
-        // Clear the file...
-        file = null;
-      });
+      await uploadFile(state.path, file);
+      contentUpdated();
+      // Clear the file...
+      file = null;
     } else {
       alert("No file has been selected!");
     }

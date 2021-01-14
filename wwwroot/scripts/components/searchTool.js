@@ -3,19 +3,17 @@
 
 
 export const SearchTool = (id, onSearchClicked) => {
+  const searchDiv = document.createElement("div");
+  searchDiv.id = id;
+  const searchInput = document.createElement("input");
+  searchDiv.appendChild(searchInput);
 
+  const onSearchButtonClicked = () => {
+    onSearchClicked(searchInput.value);
+  };
 
-    const searchDiv = document.createElement("div");
-    searchDiv.id = id;
-    const searchInput = document.createElement("input");
-    searchDiv.appendChild(searchInput);
+  const searchButton = Button("search-btn", "Search", onSearchButtonClicked, "Search for files.");
+  searchDiv.appendChild(searchButton);
 
-    const onSearchButtonClicked = () => {
-        onSearchClicked(searchInput.value);
-    };
-
-    const searchButton = Button("search-btn", "Search", onSearchButtonClicked);
-    searchDiv.appendChild(searchButton);
-
-    return searchDiv;
+  return searchDiv;
 };

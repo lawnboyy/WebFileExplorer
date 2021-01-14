@@ -48,7 +48,7 @@ export const FileDialog = (id, text) => {
     // Un-hide the directory contents...
     dirContentsContainer.style = "display: block";
   };
-  toolbarDiv.appendChild(Button("browseButton", "Browse", onBrowseClicked));
+  toolbarDiv.appendChild(Button("browseButton", "Browse", onBrowseClicked, "Click here to return to browsing from search results."));
 
   // Add close button
   const closeButton = Button("closeButton", "Close", onCloseClicked);

@@ -5,7 +5,7 @@ const root = document.getElementById("root");
 const fileDialog = FileDialog("fileDialog", "File Manager");
 
 const onFileManagementButtonClicked = () => {
-    fileDialog.open = true;
+  fileDialog.open = true;
 };
 
 root.appendChild(fileDialog);
@@ -13,7 +13,7 @@ root.appendChild(Button("fileManagementButton", "Manage Files", onFileManagement
 
 // If we have some state in the URL, then open the dialog.
 if (window.location.pathname && window.location.pathname !== "/") {
-    fileDialog.open = true;
+  fileDialog.open = true;
 }
 
 

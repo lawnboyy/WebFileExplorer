@@ -29,3 +29,5 @@ Choose File: Opens a file dialog to select a local file to upload.
 Upload: Uploads a file if one is selected.
 
 Download: The download buttons are to the left of the file name. Clicking it will download the file.
+
+Delete: The delete button is the trash icon between the download and the file name. It will confirm that you want to delete.

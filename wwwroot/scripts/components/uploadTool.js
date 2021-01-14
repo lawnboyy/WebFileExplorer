@@ -2,6 +2,12 @@
 import { contentUpdated, getAppState } from "../utilities/appStateUtility.js";
 import { uploadFile } from "../api/api.js";
 
+/**
+ * Factory function that returns the file upload tool.
+ * @param {string} id The id to give this HTML element.
+ * @returns {object} Returns an HTML element that provides upload
+ * functionality.
+ */
 export const UploadTool = (id) => {
   let file = null;
   const container = document.createElement("div");
@@ -15,6 +21,9 @@ export const UploadTool = (id) => {
 
   select.addEventListener("change", fileSelected, false);
 
+  // Grabs the current path from the app state and uploads the
+  // given file.
+  // TODO: Check for the existence of a file here.
   const onUploadClicked = () => {
     const state = getAppState();
     uploadFile(state.path, file).then((response) => {

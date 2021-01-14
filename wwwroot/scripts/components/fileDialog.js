@@ -1,17 +1,24 @@
 ﻿import { Button } from "./button.js";
 import { DirectoryContentList } from "./directoryContentList.js";
-import { decodeUrl } from "../utilities/urlUtility.js";
 import { getAppState } from "../utilities/appStateUtility.js";
 import { SearchTool } from "./searchTool.js";
 import { SearchResults } from "./searchResults.js";
 import { UploadTool } from "./uploadTool.js";
 
+/**
+ * Factory function that creates and returns an HTML dialog for the file management.
+ * @param {string} id This string will be used for the HTML id.
+ * @param {string} text This string will be used for the title display text.
+ * @returns {object} Returns an HTML dialog element.
+ */
 export const FileDialog = (id, text) => {
   const dialog = document.createElement("dialog");
   dialog.id = id;
   dialog.style = "width: 50%; height: 75%; overflow: auto";
   dialog.innerHTML = text;
 
+  
+  // Handler for the close button.
   const onCloseClicked = () => {
     dialog.open = false;
   };
@@ -29,6 +36,8 @@ export const FileDialog = (id, text) => {
 
   // Add search control
   let results = null;
+  // Event handler for clicking the search. Hides the browsing
+  // UI and displays the results of the file search.
   const onSearchToolClicked = (term) => {
     if (results) {
       dialog.removeChild(results);

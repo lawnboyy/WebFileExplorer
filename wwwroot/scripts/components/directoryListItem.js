@@ -1,4 +1,10 @@
-﻿export const DirectoryListItem = (dir, onClicked) => {
+﻿/**
+ * Factory function that creates and returns a directory list item as an HTML element.
+ * @param {object} dir The directory object to render.
+ * @param {function} onClicked Event handler for clicking this directory item.
+ * @returns {object} Returns an HTML element.
+ */
+export const DirectoryListItem = (dir, onClicked) => {
   const directoryListItem = document.createElement("li");
   directoryListItem.id = dir.fullName;
 

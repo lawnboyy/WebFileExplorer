@@ -2,8 +2,12 @@
 import { downloadFile } from "../api/api.js";
 import { formatDiskSize } from "../utilities/fileUtility.js";
 
-
-
+/**
+ * Factory function that creates and returns a file list item as an HTML element.
+ * @param {string} id The id to give this HTML element.
+ * @param {object} file The file object to render.
+ * @returns {object} Returns an HTML element that represents a file.
+ */
 export const FileListItem = (id, file) => {
   // Top level list item element that will contain the file attribute content.
   const fileListItem = document.createElement("li");

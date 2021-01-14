@@ -136,13 +136,13 @@ namespace WebFileExplorer.Repositories
           // Built in search; easy peazy...
           var info = new DirectoryInfo(rootPath);
           return info
-            .GetFiles(term, SearchOption.AllDirectories)
+            .GetFiles($"*{term}*", SearchOption.AllDirectories)
             .Select(f => new File
             {
               Name = f.Name,
               FullName = StripRoot(f.FullName, rootPath),
               SizeInBytes = f.Length
-            });
+            }).OrderBy(f => f.Name);
         }
       }
       else
@@ -273,7 +273,7 @@ namespace WebFileExplorer.Repositories
 
     private async Task<IEnumerable<File>> SearchByIndex(string term)
     {
-      return await _index.Files.Where(f => f.Name.Contains(term)).ToListAsync();
+      return await _index.Files.Where(f => f.Name.Contains(term)).OrderBy(f => f.Name).ToListAsync();
     }
 
     private bool IsRootIndexedInWindows(string rootPath)
@@ -322,7 +322,7 @@ namespace WebFileExplorer.Repositories
       }
 
       connection.Close();
-      return files;
+      return files.OrderBy(f => f.Name);
     }
 
     private void SearchRecursiveParallel(string term, DirectoryInfo dirInfo, ConcurrentBag<File> files)

@@ -7,6 +7,10 @@ using localdb. So if you run this on a Windows machine with Visual Studio, it sh
 once at start up as a background task. So search may be slow until the index is built as it will have to crawl the
 file tree.
 
+## Configuration
+
+To configure the root file path, update the RootFilePath setting in the appsettings.json file at the root of the project.
+
 ## Downloads
 
 Downloads will not work for all file extensions. Downloads will work for the common MIME types found here: 

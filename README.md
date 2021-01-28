@@ -3,7 +3,7 @@
 ## General
 
 This project was developed with Visual Studio 2019 Community edition in .NET 5. It generates a search index database
-using localdb. So if you run this on a Windows machine with Visual Studio, it should just work. The index is build
+using localdb. So if you run this on a Windows machine with Visual Studio, it should just work. The index is built
 once at start up as a background task. So search may be slow until the index is built as it will have to crawl the
 file tree.
 

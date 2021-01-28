@@ -12,8 +12,7 @@ export const deleteFile = async (path) => {
 
 /**
  * Makes an API call to download a file from the server.
- * @param {object} file The file object to download.
- * @param {string} file.name The name of the file.
+ * @param {object} file The file object to download. 
  */
 export const downloadFile = async (file) => {
   const response = await fetch("/files/download", {
@@ -51,7 +50,7 @@ export const fetchDirectory = async (path) => {
  * Makes an API call to search for all files whose name contains or matches
  * the given search term.
  * @param {string} term The search term to match against file names.
- * @param {object[]} The search results as an array of file objects.
+ * @returns {object[]} The search results as an array of file objects.
  */
 export const search = async (term) => {
   const response = await fetch(`/files?term=${term}`);
@@ -59,9 +58,10 @@ export const search = async (term) => {
 };
 
 /**
- * Makes an API call to search for all files whose name contains or matches
- * the given search term.
- * @param {string} term - The search term to match against file names.
+ * Uploads a file to the server.
+ * @param {string} path The path to save the file under.
+ * @param {object} file The file to upload.
+ * @returns {object} The response.
  */
 export const uploadFile = async (path, file) => {
   const formData = new FormData();

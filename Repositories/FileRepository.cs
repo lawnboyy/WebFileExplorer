@@ -43,7 +43,6 @@ namespace WebFileExplorer.Repositories
     /// </summary>
     /// <param name="rootPath">The root path of the searchable index</param>
     /// <returns>A Task</returns>
-
     Task IndexFiles(string rootPath);
     /// <summary>
     /// File search method. Utilizes the built index if it's not currently indexing.

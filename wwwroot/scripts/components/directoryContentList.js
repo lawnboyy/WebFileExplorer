@@ -52,8 +52,7 @@ export class DirectoryContentList {
   /**
    * Given the path, fetches the directory contents and renders the component.
    * @param {string} path The path of the directory to display.
-   */
-  // TODO: Look at using async/await for this.
+   */  
   async #buildContent(path) {
     const dir = await fetchDirectory(path)
     this.#directory = dir;
